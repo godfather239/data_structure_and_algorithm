@@ -1,13 +1,20 @@
-all: binary_tree sort linklist string_operation
+CXX = g++
+CXXFLAGS = -g
 
-binary_tree : binary_tree.cpp
-	g++ -o $@ $<
-sort : sort.cpp
-	g++ -o $@ $<
-linklist : linklist.cpp
-	g++ -o $@ $<
-string_operation : string_operation.cpp
-	g++ -o $@ $<
+OUTPUT = binary_tree
+all: $(OUTPUT)
+
+SRC := $(wildcard *.cpp)
+OBJS := $(SRC:.CPP=.O)
+
+binary_tree : binary_tree.o
+	$(CXX) -o $@ $< $(CXXFLAGS)
+#sort : sort.cpp
+#	$(CXX) -o $@ $< $(CXXFLAGS)
+#linklist : linklist.cpp
+#	$(CXX) -o $@ $< $(CXXFLAGS)
+#string_operation : string_operation.cpp
+#	$(CXX) -o $@ $< $(CXXFLAGS)
 
 clean:
-	rm -f test main.o
+	rm -f $(OUTPUT) *.o
