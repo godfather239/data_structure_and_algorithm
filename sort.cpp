@@ -2,9 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 #include <utility>
 
 typedef int (*sort_func_ptr) (int*, int);
+
+#define heap_left(p) (2 * (p) + 1)
+#define heap_right(p) (2 * ((p) + 1))
 
 int partition(int* a, int p, int r);
 int random_partition(int* a, int p, int r);
@@ -25,6 +29,33 @@ int test_sort(int n, sort_func_ptr sf);
 int select_asc(int* a, int n, int k);
 int print_kmin(int* a, int n, int k);
 
+/**
+ * @breif       Keep feature of max heap
+ * @param[in]   heap array pointer
+ * @param[in]   array size
+ * @param[in]   array index of the sub tree which should be reshaped to keep feature of max heap
+ * @return
+ *              0       succeed
+ *              -1      error happens
+ **/
+int max_heapify(int* a, int size, int p);
+
+//int heap_left(int p);
+//int heap_right(int p);
+
+/**
+ * @brief       Build max heap on array specified by argv[@a]
+ * @param[in]   pointer of array
+ * @param[in]   array size
+ * @return
+ *              0       succeed
+ *              -1      failed
+ **/
+int build_max_heap(int* a, int size);
+
+int heap_sort(int* a, int size);
+
+int test_heap_build(int size);
 
 // The simpliest partition implementaion which chooses arr[r] as pivot by default
 int partition(int* a, int p, int r)
@@ -150,6 +181,77 @@ int print_kmin(int* a, int n, int k)
     return 0;
 }
 
+int max_heapify(int* a, int size, int p)
+{
+    assert(a && size > 0 && p >= 0 && p < size);
+    int target = p;
+    int l = heap_left(p);
+    int r = heap_right(p);
+    if (l < size && a[l] > a[target])
+        target = l;
+    if (r < size && a[r] > a[target])
+        target = r;
+    if (p != target) {
+        std::swap(a[p], a[target]);
+        return max_heapify(a, size, target);
+    } else {
+        return 0;
+    }
+}
+
+//int heap_left(int p)
+//{
+//    return 2 * p + 1;
+//}
+//
+//int heap_right(int p)
+//{
+//    return 2 * (p + 1);
+//}
+
+/**
+ * Do max_heapify operation from the leaf nodes to root nodes level by level,
+ * then we will get a well builded max heap.
+ **/
+int build_max_heap(int* a, int size)
+{
+    if (!a || size <= 0)
+        return -1;
+    for (int i = size / 2 - 1; i >= 0; --i)
+        max_heapify(a, size, i);
+    return 0;
+}
+
+int heap_sort(int* a, int size)
+{
+    if (!a || size <= 0)
+        return -1;
+    build_max_heap(a, size);
+    while (size > 1) {
+        std::swap(a[0], a[size-1]);
+        max_heapify(a, --size, 0);
+    }
+    return 0;
+}
+
+int test_heap_build(int size)
+{
+    if (size <= 0)
+        return -1;
+    int* a = new int[size];
+    for (int i = 0; i < size; ++i)
+        a[i] = rand() % 100;
+
+    printf("Before build heap:\n");
+    print_array(a, size);
+    build_max_heap(a, size);
+    printf("After build heap: \n");
+    print_array(a, size);
+
+    delete[] a;
+    return 0;
+}
+
 int main(int argc, char* argv[])
 {
     if (argc != 2) {
@@ -158,13 +260,14 @@ int main(int argc, char* argv[])
     }
 
     srand(time(NULL));
-    //for (int i = 0; i < 100; ++i) {
-    //    printf("Test %d: \n", i+1);
-    //    test_sort(atoi(argv[1]), quicksort);
-    //}
-    test_select();
-    int a[10] = {1, 15, 7, 6, 5, 10, 8, 3, 4, 9};
-    print_kmin(a, 10, 5);
+    for (int i = 0; i < 10; ++i) {
+        printf("Test %d: \n", i+1);
+        test_sort(atoi(argv[1]), heap_sort);
+    }
+    //test_select();
+    //int a[10] = {1, 15, 7, 6, 5, 10, 8, 3, 4, 9};
+    //print_kmin(a, 10, 5);
+    //test_heap_build(atoi(argv[1]));
 
     //test_partition();
     return 0;
