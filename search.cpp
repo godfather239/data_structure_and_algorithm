@@ -120,6 +120,6 @@ int test_find()
 
 int main(int argc, char* argv[])
 {
-    test_find();
+    test_find(); 
     return 0;
 }
