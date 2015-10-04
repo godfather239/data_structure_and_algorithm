@@ -121,5 +121,6 @@ int test_find()
 int main(int argc, char* argv[])
 {
     test_find(); 
+    printf("Hello world\n");
     return 0;
 }
