@@ -3,7 +3,7 @@ package org.example;
 
 /**
  * 矩阵链乘法
- * Author: 辰星
+ * Author: godfather239
  * Date:  2023/5/18
  */
 public class MatrixChain {
