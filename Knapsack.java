@@ -10,7 +10,7 @@ import java.util.Random;
  * 一般而言，令P(i, Y)为总重量不超过Y情况下，前i个商品的总价值，则有：
  *   P(0, Y) = 0
  *   若Wi > Y，P(i,Y) = P(i-1,Y)
- *   若Wi <= Y, P(i,Y) = Max{P(i-1,Y), P(i-1, Y-Wi) + Pi}
+ *   若Wi <= Y, P(i,Y) = Max{P(i-1,Y), P(i-1, Y-Wi) + Vi}
  *
  * 非递归解：
  * 构造N*W的矩阵，自底向上填充矩阵元素，P[i][y]表示总重量不超过y的情况下，前i个商品的最大价值，注意是前i个，而不是N个里任选i个
